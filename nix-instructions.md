@@ -21,7 +21,7 @@ Most modern Nix commands require **Flakes** enabled. If you haven't enabled them
   	*EXAMPLE: instead of running a normal command, you paste the flag at the very end like this:*
   
    ```sh
-   nix run "git+https://github.com/zaps166/NFSIISE" --extra-experimental-	features 'nix-command flakes'
+   nix run "git+https://github.com/zaps166/NFSIISE" --extra-experimental-features 'nix-command flakes'
    ```
    
 2. **Permanent Method (Recommended):** Add this to your NixOS `configuration.nix` or system `~/.config/nix/nix.conf`:
