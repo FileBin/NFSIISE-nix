@@ -21,7 +21,7 @@ Most modern Nix commands require **Flakes** enabled. If you haven't enabled them
   	*EXAMPLE: instead of running a normal command, you paste the flag at the very end like this:*
   
    ```sh
-   nix run "git+https://github.com/FileBin/NFSIISE-nix" --extra-experimental-	features 'nix-command flakes'
+   nix run "git+https://github.com/zaps166/NFSIISE" --extra-experimental-	features 'nix-command flakes'
    ```
    
 2. **Permanent Method (Recommended):** Add this to your NixOS `configuration.nix` or system `~/.config/nix/nix.conf`:
@@ -37,7 +37,7 @@ Use this if you just want to launch and play the game immediately without modify
 
 * **Using Flakes:**
   ```sh
-  nix run "git+https://github.com/FileBin/NFSIISE-nix"
+  nix run "git+https://github.com/zaps166/NFSIISE"
   ```
 
 ---
@@ -49,17 +49,17 @@ Use this if you are using Nix as a package manager on top of a non-NixOS Linux d
 ####  ❄️ Using Flakes (Modern)
 * **Install:**
   ```sh
-  nix profile install "git+https://github.com/FileBin/NFSIISE-nix"
+  nix profile install "git+https://github.com/zaps166/NFSIISE"
   ```
 * **Uninstall:**
   ```sh
-  nix profile remove "git+https://github.com/FileBin/NFSIISE-nix"
+  nix profile remove "git+https://github.com/zaps166/NFSIISE"
   ```
 
 #### Using `nix-env` (Legacy / Non-Flake)
 * **Install:**
   ```sh
-  nix-env -f "https://github.com/FileBin/NFSIISE-nix/tarball/master" -iA nfs2se
+  nix-env -f "https://github.com/zaps166/NFSIISE/tarball/master" -iA nfs2se
   ```
 * **Uninstall:**
   ```sh
@@ -77,7 +77,7 @@ First, add the repository to your `flake.nix` inputs:
 ```nix
 # flake.nix
 {
-  inputs.nfs2se.url = "git+https://github.com/FileBin/NFSIISE-nix";
+  inputs.nfs2se.url = "git+https://github.com/zaps166/NFSIISE";
 
   outputs = { self, nixpkgs, nfs2se, ... }@inputs: {
     nixosConfigurations.mysystem = nixpkgs.lib.nixosSystem {
@@ -110,7 +110,7 @@ Add this block directly into your standard configuration file to automatically d
 # configuration.nix
 { pkgs, ... }:
 let
-  nfs2se-src = builtins.fetchTarball "https://github.com/FileBin/NFSIISE-nix/tarball/master";
+  nfs2se-src = builtins.fetchTarball "https://github.com/zaps166/NFSIISE/tarball/master";
   nfs2se-pkg = (import nfs2se-src { inherit pkgs; }).nfs2se;
 in {
   ...
@@ -154,7 +154,7 @@ Add this evaluation block to your traditional, standalone `home.nix` profile:
 # home.nix
 { pkgs, ... }:
 let
-  nfs2se-src = builtins.fetchTarball "https://github.com/FileBin/NFSIISE-nix/tarball/master";
+  nfs2se-src = builtins.fetchTarball "https://github.com/zaps166/NFSIISE/tarball/master";
   nfs2se-pkg = (import nfs2se-src { inherit pkgs; }).nfs2se;
 in {
   ...
