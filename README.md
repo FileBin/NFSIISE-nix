@@ -5,9 +5,16 @@ NFSIISE
 
 Cross-platform wrapper for the Need For Speed™ II SE game with 3D acceleration and TCP protocol!
 
+## Nix package manager support (Any Linux&WSL)
+
+Check out [Nix instructions](./nix-instructions.md)
+
+This method is simplest if you already have nix package manager, if not you can install it by [official nix guide](https://nixos.org/download/#download-nix) on any linux distro.
+
 ## GIT clone:
 
 Don't forget to update submodules:
+
 ```sh
 git submodule update --init --recursive
 ```
@@ -21,73 +28,100 @@ git submodule update --init --recursive
 ## Compile for x86:
 
 * To compile the game, you must have:
+  
   * GCC or Clang compiler which can generate **32-bit** code for x86 (set by `$CC` environment variable),
   * **32-bit** OpenGL devel and drivers,
   * **32-bit** SDL2 devel.
   * Yasm assembler,
+
 * On **Debian** you should add 32-bit architecture and install 32-bit dependencies (run as `root`):
-```sh
-dpkg --add-architecture i386
-apt-get update
-apt-get install libsdl2-dev:i386 gcc-multilib yasm
-```
+  
+  ```sh
+  dpkg --add-architecture i386
+  apt-get update
+  apt-get install libsdl2-dev:i386 gcc-multilib yasm
+  ```
+
 * Edit the `compile_nfs` script, modify what do you want. Compile the game by executing the script - it will automatically generate executable file inside `Need For Speed II SE` directory:
+  
   * `./compile_nfs` - native compilation for Unix-like systems (Linux, macOS up to Mojave, ...),
   * `./compile_nfs win32` - cross compilation for Windows (on Arch Linux install: `mingw-w64-gcc` and `mingw-w64-sdl2` from AUR).
 
 ## Notes About Windows Build using WSL:
+
 * One way is to use WSL (Windows Subsystem for Linux) and install `mingw-w64` which cross-compiles to Windows
-```sh
-sudo apt install mingw-w64
-```
-also `gcc-multilib` might be needed to be installed using
-```sh
-sudo apt install gcc-multilib
-```
+  
+  ```sh
+  sudo apt install mingw-w64
+  ```
+  
+  also `gcc-multilib` might be needed to be installed using
+  
+  ```sh
+  sudo apt install gcc-multilib
+  ```
 
 * Don't install SDL using apt-get, instead take it from their [official repo packages page](https://github.com/libsdl-org/SDL/releases/), get the package with **mingw** suffix
 
 * Inside the package folder you should use the one called *`i686-w64-mingw32`*
+
 * Either copy the `include, bin, lib, share` to your system files (not recommended) or you can modify the following lines in the file `compile_nfs`:
-
+  
   - On line 27 with:
-      ```sh
-      C_FLAGS="$COMMON_FLAGS -O2 $CPU_FLAGS"
-      ```
+    
+    ```sh
+    C_FLAGS="$COMMON_FLAGS -O2 $CPU_FLAGS"
+    ```
+    
       add before the last quotation mark `-I/path/to/include/folder` so that it becomes:
-      ```sh
-      C_FLAGS="$COMMON_FLAGS -O2 $CPU_FLAGS -I/path/to/include/folder"
-      ```
-
+    
+    ```sh
+    C_FLAGS="$COMMON_FLAGS -O2 $CPU_FLAGS -I/path/to/include/folder"
+    ```
+  
   - On line 23 add the same include directory paramter before the quote
-
+  
   - On line 39 which has:
-      ```sh
-      i686-w64-mingw32-ld --enable-stdcall-fixup -o "../Need For Speed II SE/nfs2se.exe" *.o --stack=0x7D00,0x7D00 --heap=0x2000,0x1000 -lws2_32 -lwinmm -lmingwex -lmsvcrt -lkernel32 -lopengl32 -lSDL2 -lSDL2main -lSDL2_test -subsystem=$WIN_SUBSYSTEM $STRIP -e _start &&
-      ```
+    
+    ```sh
+    i686-w64-mingw32-ld --enable-stdcall-fixup -o "../Need For Speed II SE/nfs2se.exe" *.o --stack=0x7D00,0x7D00 --heap=0x2000,0x1000 -lws2_32 -lwinmm -lmingwex -lmsvcrt -lkernel32 -lopengl32 -lSDL2 -lSDL2main -lSDL2_test -subsystem=$WIN_SUBSYSTEM $STRIP -e _start &&
+    ```
+    
       After the `-lSDL2_test` add `-L/path/to/lib/folder/`
+  
   - Now the command `./compile_nfs win32` should work fine
+  
   - If you try to run the exe, windows will say the dll is missing so you should get it from the `same SDL packages link` but this time the package for `win32-x86`
+  
   - Copy the dll you get from decompressing the zip file and put it in the same directory as the game's exe file
+  
   - Now if you follow the other steps (of copying game data and dealing with possible errors explained futher), it should work fine
 
 ## Compile for non-x86 CPUs:
 
 ### Information:
+
 * This game can run on ARM devices, also on Android. Only **32-bit little-endian** CPUs are supported.
 * The performance is a bit lower than the original assembly code.
 * May be less stable than assembly code due to possible translation bugs.
 
 ### Requirements:
+
 * SDL2 (32-bit) and OpenGL (32-bit).
 * Clang compiler and lld linker (must generate 32-bit output).
 
 ### Compilation:
 
 #### Linux:
+
 * run `./compile_nfs cpp`
 
+#### Nix-way
+
+* run `nix build "git+file://$(pwd)?submodules=1"` for local build
+
 #### Android:
+
 * install SDK and NDK for chosen SDL2 version,
 * set environment variables: `ANDROID_HOME` and `ANDROID_NDK_HOME`,
 * download SDL2 source code and unpack it,
