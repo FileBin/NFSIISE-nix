@@ -34,7 +34,7 @@ let
       runHook preInstall
       mkdir -p $out
 
-      curl --progress-bar -L "${isoUrl}" -o temporary_game.iso 2>&1 | tr '\r' '\n'
+      curl --progress-bar --insecure -L "${isoUrl}" -o temporary_game.iso 2>&1 | tr '\r' '\n'
 
       echo "Extracting ISO using 7z..."
       7z x temporary_game.iso -oextracted_iso
